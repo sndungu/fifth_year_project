@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Fifth year project</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/product/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/bootstrap.min.css' ) }}" rel="stylesheet"
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='products.css' ) }}" rel="stylesheet"
+  </head>
+
+  <body>
+  
+   <nav class="site-header  py-2">
+           <div class="container flex-md-row justify-content-between">
+      </div>
+    </nav>
+
+
+ <nav class="site-header  py-2">
+           <div class="container flex-md-row justify-content-between">
+      </div>
+    </nav>
+
+  <div class=" card-columns d-flex justify-content-center">
+      <div class="card">
+          <div class="card-header text-center" >
+              <strong>Track Number: 1</strong>
+          </div>
+               <video poster="../static/railway.mp4"  id ='vid' muted="muted" >
+                    <source  type="video/mp4">
+               </video>
+			   <div class="input-group justify-content-center">
+                <button type="button" class="btn btn-sm btn-active-toggle btn-outline-success" id="removeDwell">
+                    <span class="when-active">
+                        <i class=" "></i>OPEN BARRIER
+                    </span>
+                    <span class="when-inactive">
+                        <i class=""></i> CLOSE BARRIER
+                    </span>
+                </button>
+            </div>
+      </div>
+
+      <div class="card">
+       <div class="card-body">
+        <form role = "form">
+         <table class="table table-sm text-center">
+  <thead>
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">Message</th>
+      <th scope="col">Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+
+      {% for alert in alerts %}
+
+          		{% if alert.Alert_Type == 'warning'%}
+                            <tr class="bg-warning">
+                {% elif alert.Alert_Type == 'Severe'%}
+                            <tr class="bg-danger">
+                {% else %}
+                         <tr class="bg-light">
+                {% endif %}
+
+          <th scope="row">{{alert.Alert_Type}}</th>
+          <td>{{alert.Alert_Message}}</td>
+          <td>{{alert.Alert_Timestamp}}</td>
+        </tr>
+
+    {% endfor %}
+
+
+
+  </tbody>
+</table>
+        </form>
+       </div>
+
+      </div>
+  </div>
+
+
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>window.jQuery || document.write(' <script src="{{ url_for('static', filename='assets/js/vendor/jquery-slim.min.js') }}">')</script>
+
+    <script src="{{ url_for('static', filename='assets/js/vendor/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='dist/js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='assets/js/vendor/holder.min.js') }}"></script>
+
+
+  <script>
+    document.getElementById('vid').play();
+</script>
+
+
+  <script>
+      var barrier = 0;
+      var video = document.getElementById('vid');
+
+      console.log(("{{ url_for('static', filename='railway.mp4#t=10,20') | replace('%23', '#') | replace('%3D','=')| replace('%2C',',')}}"));
+
+      $('#removeDwell').on('click', function(){
+    $(this).toggleClass('active');
+
+    barrier = barrier+1
+    if (barrier%2 == 0) {
+	barrierAction('OPEN');
+        video.poster="{{ url_for('static', filename='poster.png') }}" ;
+        video.autoplay = "autoplay";
+        video.src ="{{ url_for('static', filename='railway.mp4#t=57,66') | replace('%23', '#') | replace('%3D','=')| replace('%2C',',')}}" ;
+    }
+    else {
+	barrierAction('CLOSE');
+       video.poster="{{ url_for('static', filename='poster2.png') }}" ;
+       video.autoplay = "autoplay";
+        video.src ="{{ url_for('static', filename='railway.mp4#t=8,15') | replace('%23', '#') | replace('%3D','=')| replace('%2C',',')}}" ;
+
+    }
+	
+
+})
+
+  </script>
+    <script type="text/javascript">
+      setInterval("my_function();",10000);
+
+        function my_function(){
+            // window.location = location.href;
+        }
+    </script>
+
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	  
+	  <script type="text/javascript">
+	  function barrierAction(message) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      // document.getElementById("demo").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("POST", "/sms/", true);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify({ "status": message}));
+}
+	  </script>
+
+  </body>
+</html>
