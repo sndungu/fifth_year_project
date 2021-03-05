@@ -3,6 +3,7 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Boo
 from datetime import datetime
 
 SQLITE = 'sqlite'
+POSTGRES = 'postgres'
 Alerts = 'Alerts'
 Credentials = 'Credentials'
 Train_schedule = 'Train_schedule'
@@ -10,7 +11,8 @@ Train_schedule = 'Train_schedule'
 
 class MyDatabase:
     DB_ENGINE = {
-        SQLITE: 'sqlite:///{DB}'
+        SQLITE: 'sqlite:///{DB}',
+        POSTGRES: 'POSTGRES'
     }
     db_engine = None
 
