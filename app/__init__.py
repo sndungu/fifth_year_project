@@ -34,9 +34,7 @@ def create_tables():
 
 @app.route('/sms/',methods=['POST','GET'])
 def sms1():
-    print(request.data)
     data =json.loads(request.data.decode())
-    print(data)
     status = data['status']
     number = '+254746630324'
     response = sms.send(str(status), [number])
@@ -46,7 +44,7 @@ def sms1():
 @app.route('/',methods=['POST','GET'])
 def index():
     credentials = models.Credential.query.all()
-    alerts = models.Alert.query.all()[-16:]
+    alerts = models.Alert.query.all()
     train_schedule = models.TrainSchedule.query.all()
     LAST_TRAIN, NEXT_TRAIN = None, None
 
@@ -59,11 +57,8 @@ def index():
 
 @app.route('/Alerts',methods=['POST'])
 def Alerts():
-    print(request.data)
     try:
         data =json.loads(request.data.decode())
-        print(data)
-        alerts = models.Alert.query.all()
         alert = models.Alert(type=f"{data['Alert_Type']}",message=f"{data['Alert_Message']}")
         alert.save()
     except Exception as err:
@@ -74,5 +69,4 @@ def Alerts():
 def Credentials():
     data =json.loads(request.data.decode())
     cred = models.Credential.query.filter_by(id=1).first()
-    print(cred)
     return ({"status":"succesful"})
