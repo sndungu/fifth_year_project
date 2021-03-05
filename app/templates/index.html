@@ -65,17 +65,19 @@
 
       {% for alert in alerts %}
 
-          		{% if alert.Alert_Type == 'warning'%}
+          		{% if alert.type == 'warning'%}
                             <tr class="bg-warning">
-                {% elif alert.Alert_Type == 'Severe'%}
+                {% elif alert.type == 'Severe'%}
                             <tr class="bg-danger">
+				{% elif alert.type == 'success'%}
+                    <tr class="bg-success">
                 {% else %}
                          <tr class="bg-light">
                 {% endif %}
 
-          <th scope="row">{{alert.Alert_Type}}</th>
-          <td>{{alert.Alert_Message}}</td>
-          <td>{{alert.Alert_Timestamp}}</td>
+          <th scope="row">{{alert.type}}</th>
+          <td>{{alert.message}}</td>
+          <td>{{alert.timestamp}}</td>
         </tr>
 
     {% endfor %}

@@ -46,7 +46,7 @@ def sms1():
 @app.route('/',methods=['POST','GET'])
 def index():
     credentials = models.Credential.query.all()
-    alerts = models.Alert.query.all()[-18:]
+    alerts = models.Alert.query.all()[-16:]
     train_schedule = models.TrainSchedule.query.all()
     LAST_TRAIN, NEXT_TRAIN = None, None
 
@@ -55,7 +55,6 @@ def index():
             LAST_TRAIN = _train_schedule
         else:
             NEXT_TRAIN = _train_schedule
-
     return render_template('index.html',credentials=credentials,alerts=alerts,NEXT_TRAIN=NEXT_TRAIN ,LAST_TRAIN=  LAST_TRAIN)
 
 @app.route('/Alerts',methods=['POST'])
@@ -65,10 +64,7 @@ def Alerts():
         data =json.loads(request.data.decode())
         print(data)
         alerts = models.Alert.query.all()
-        count = 0
-        if len(alerts) >= 16:
-            alerts[0].delete()
-        alert = models.Alert(type=f"'{data['Alert_Type']}'",message=f"'{data['Alert_Message']}'")
+        alert = models.Alert(type=f"{data['Alert_Type']}",message=f"{data['Alert_Message']}")
         alert.save()
     except Exception as err:
         print(err)

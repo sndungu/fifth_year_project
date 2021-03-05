@@ -20,7 +20,7 @@ class Alert(db.Model):
     timestamp = db.Column('Alert_Timestamp', db.Text, default=datetime.now().strftime("%d/%b/%Y %H:%M:%S"))
 
     def __repr__(self):
-        return f'<Alert {self.id}. Type: {self.type}.>'
+        return f'<Alert {self.id}. Message: {self.message}.>'
 
     def save(self):
         save(self)
