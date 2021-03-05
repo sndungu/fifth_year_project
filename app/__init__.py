@@ -1,7 +1,6 @@
 # app/__init__.py
 
 from flask import Flask,render_template,request
-from database import MyDatabase,SQLITE, Alerts,Credentials,Train_schedule
 import os
 import json
 import africastalking
@@ -33,15 +32,23 @@ def create_tables():
     db.create_all()
     return ("Done")
 
-@app.route('/sms/<number>/<status>',methods=['POST','GET'])
-def sms1(number,status):
-    return sms.send(str(status), [number])
+@app.route('/sms/',methods=['POST','GET'])
+def sms1():
+    print(request.data)
+    data =json.loads(request.data.decode())
+    print(data)
+    status = data['status']
+    number = '+254746630324'
+    response = sms.send(str(status), [number])
+    print(response)
+    return ''
 
 @app.route('/',methods=['POST','GET'])
 def index():
     credentials = models.Credential.query.all()
     alerts = models.Alert.query.all()[-18:]
     train_schedule = models.TrainSchedule.query.all()
+    LAST_TRAIN, NEXT_TRAIN = None, None
 
     for _train_schedule in train_schedule:
         if _train_schedule.passing_status == True:
@@ -49,15 +56,22 @@ def index():
         else:
             NEXT_TRAIN = _train_schedule
 
-    return render_template('index.html',credentials=credentials,alerts=alerts,NEXT_TRAIN=None ,LAST_TRAIN=  None)
+    return render_template('index.html',credentials=credentials,alerts=alerts,NEXT_TRAIN=NEXT_TRAIN ,LAST_TRAIN=  LAST_TRAIN)
 
 @app.route('/Alerts',methods=['POST'])
 def Alerts():
     print(request.data)
-    data =json.loads(request.data.decode())
-    print(data)
-    alert = models.Alert(type=f"'{data['Alert_Type']}'",message=f"'{data['Alert_Message']}'")
-    alert.save()
+    try:
+        data =json.loads(request.data.decode())
+        print(data)
+        alerts = models.Alert.query.all()
+        count = 0
+        if len(alerts) >= 16:
+            alerts[0].delete()
+        alert = models.Alert(type=f"'{data['Alert_Type']}'",message=f"'{data['Alert_Message']}'")
+        alert.save()
+    except Exception as err:
+        print(err)
     return ("")
 
 @app.route('/Credentials',methods=['POST'])

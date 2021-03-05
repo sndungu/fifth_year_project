@@ -7,6 +7,10 @@ def save(field):
     db.session.add(field)
     db.session.commit()
 
+def delete(field):
+    db.session.delete(field)
+    db.session.commit()
+
 class Alert(db.Model):
     __tablename__ = 'Alerts'
 
@@ -20,6 +24,9 @@ class Alert(db.Model):
 
     def save(self):
         save(self)
+
+    def delete(self):
+        delete(self)
 
 
 class TrainSchedule(db.Model):
@@ -37,6 +44,9 @@ class TrainSchedule(db.Model):
     def save(self):
         save(self)
 
+    def delete(self):
+        delete(self)
+
 class Credential(db.Model):
     __tablename__ = 'Credentials'
 
@@ -50,3 +60,6 @@ class Credential(db.Model):
 
     def save(self):
         save(self)
+
+    def delete(self):
+        delete(self)
